@@ -2,8 +2,11 @@ import { createStackNavigator } from "@react-navigation/stack";
 import React from "react";
 import SignUp from "../app/screen/auth/signup";
 import LogIn from "../app/screen/auth/login";
-import Home from "../app/screen/home/home"
-import HeaderAdmin from "../app/screen/admin/headerAdmin"
+import Home from "../app/screen/home/home";
+import HomeAdmin from "../app/screen/admin/home";
+import ManagerTypeProduct from "./admin/managerProduct";
+import Statistic from "./admin/statistic"
+import Admin from "../app/screen/admin/home";
 
 const Stack = createStackNavigator();
 
@@ -27,8 +30,23 @@ const RootLayout = () => {
           options={{ headerShown: false }}
         />
         <Stack.Screen
+          name="home"
+          component={Home}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
           name="home-admin"
-          component={HeaderAdmin}
+          component={Admin}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name="manager-product"
+          component={ManagerTypeProduct}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name="statistic"
+          component={Statistic}
           options={{ headerShown: false }}
         />
       </Stack.Navigator>

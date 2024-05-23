@@ -1,29 +1,39 @@
+import HomeAdmin from '@/app/screen/admin/home';
+import { useNavigation } from '@react-navigation/native';
 import React, { useState } from 'react';
 import { View, Text, TouchableOpacity, FlatList, StyleSheet, Dimensions } from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import ManagerTypeProduct from '../admin/managerProduct';
+import Statistic from '../admin/statistic';
 
-const Menu = () => {
+const Menu = ( { choosenComponent }) => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const navigation = useNavigation()
 
   const menuItems = [
-    { id: 1, title: 'Menu Item 1' },
-    { id: 2, title: 'Menu Item 2' },
-    { id: 3, title: 'Menu Item 3' },
-    { id: 4, title: 'Menu Item 4' },
-    { id: 5, title: 'Menu Item 5' },
-    { id: 6, title: 'Menu Item 6' },
-    { id: 7, title: 'Menu Item 7' },
-    { id: 8, title: 'Menu Item 8' },
+    { id: "home-admin", title: 'Trang chủ', component: <HomeAdmin/> },
+    { id: "manager-product", title: 'Quản lý sản phẩm', component: <ManagerTypeProduct/> },
+    { id: "statistic", title: 'Thống kê', component: <Statistic/> }
   ];
 
   const openMenu = () => {
-    // alert("Open menu")
     setIsMenuOpen(!isMenuOpen);
   };
+  const switchComponent = (nameComponent) => {
+    // // navigation.navigate(nameComponent);
+    // navigation.reset({
+    //   index: 0,
+    //   routes: [
+    //     {
+    //       name: nameComponent
+    //     }
+    //   ]
+    // })
+  }
 
   const renderMenuItem = ({ item }) => (
-    <TouchableOpacity style={styles.menuItem}>
+    <TouchableOpacity style={styles.menuItem} onPress={() => choosenComponent(item.component)}>
       <Text style={styles.menuItemText}>{item.title}</Text>
     </TouchableOpacity>
   );
@@ -58,8 +68,8 @@ const windowWidth = Dimensions.get('window').width;
 const styles = StyleSheet.create({
   container: {
     // flexGrow: 1,
-    position: "relative"
-    // zIndex: 100000
+    position: "relative",
+    zIndex: 100000
   },
   menuToggle: {
     backgroundColor: 'transparent',
@@ -69,15 +79,13 @@ const styles = StyleSheet.create({
     zIndex: 1,
   },
   menuToggleText: {
-    fontSize: 18,
+    fontSize: 22,
     fontWeight: 'bold',
   },
   menuWrapper: {
     position: 'absolute',
-    // top: 10,
-    // left: 50,
+    top: 85,
     width: windowWidth / 2,
-    // height: 100,
     backgroundColor: '#fff',
     borderRadius: 5,
     zIndex: 1, 

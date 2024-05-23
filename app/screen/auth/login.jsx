@@ -11,39 +11,47 @@ import {
 import Logo from "../auth/logo";
 import { checkExistsPhoneNumber } from "@/lib/appwrite";
 import { useNavigation } from "@react-navigation/native";
+import Loading from '../../../components/loading/loading';
 
 const Login = () => {
   const [phoneNumber, setPhoneNumber] = useState("");
+  const [spinner, setSpinner] = useState(false);
+  
   const navigation = useNavigation();
-  const handleLogin = () => {
-    // checkExistsPhoneNumber(phoneNumber, function (name) {
-    //   console.log(name);
-    //   // if (phoneNumber == "") {
-    //   //   alert("Vui lòng nhập đẩy đủ thông tin!!");
-    //   //   // return;
-    //   // } else if (name == null) {
-    //   //   alert("Số điện thoại không đúng!!");
-    //   // } else {
-    //   //   navigation.reset({
-    //   //     index: 0,
-    //   //     routes: [
-    //   //       {
-    //   //         name: "home",
-    //   //         params: [name, phoneNumber],
-    //   //       },
-    //   //     ],
-    //   //   });
-    //   // }
+  const handleLogin = async () => {
+    if (phoneNumber == "") {
+      alert("Vui lòng nhập đẩy đủ thông tin!!");
+      return;
+    } 
+    setSpinner(!spinner);
+    const user = await checkExistsPhoneNumber(phoneNumber);
+    setSpinner(false);
+    if (user == null) {
+      alert("Số điện thoại không đúng!!");
+    } else {
+      console.log(user.role)
+      const route = {
+        // name: user.role == "USER" ? "home" : "home-admin",
+        name: user.role == "USER" ? "home-admin" : "home",
+        params: [user.name, phoneNumber],
+      };
+      navigation.reset({
+        index: 0,
+        routes: [
+          route
+        ],
+      });
+    }
     // });
-    navigation.reset({
-      index: 0,
-      routes: [
-        {
-          name: "home-admin",
-          params: ["Huong", phoneNumber]
-        }
-      ]
-    })
+    // navigation.reset({
+    //   index: 0,
+    //   routes: [
+    //     {
+    //       name: "home-admin",
+    //       params: ["Huong", phoneNumber]
+    //     }
+    //   ]
+    // })
   };
 
   const handelSignUp = () => {
@@ -51,53 +59,62 @@ const Login = () => {
   };
 
   return (
-    <SafeAreaView style={styles.container}>
-      <View style={styles.logoContainer}>
-        <Logo />
-      </View>
+    <View style={styles.container}>
+      <Loading spinnerDefault = {spinner}/>
+      <ScrollView style={styles.scroll}>
+        <View style={styles.logoContainer}>
+          <Logo />
+        </View>
 
-      <View style={styles.formContainer}>
-        <TextInput
-          style={styles.input}
-          value={phoneNumber}
-          onChangeText={setPhoneNumber}
-          placeholder="Số điện thoại"
-          keyboardType="numeric"
-        />
+        <View style={styles.formContainer}>
+          <TextInput
+            style={styles.input}
+            value={phoneNumber}
+            onChangeText={setPhoneNumber}
+            placeholder="Số điện thoại"
+            keyboardType="numeric"
+          />
 
-        <TouchableOpacity style={styles.button} onPress={handleLogin}>
-          <Text style={styles.buttonText}>Đăng nhập</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.button} onPress={handelSignUp}>
-          <Text style={styles.buttonText}>Đăng ký</Text>
-        </TouchableOpacity>
-      </View>
-    </SafeAreaView>
+          <TouchableOpacity style={styles.button} onPress={handleLogin}>
+            <Text style={styles.buttonText}>Đăng nhập</Text>
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.button} onPress={handelSignUp}>
+            <Text style={styles.buttonText}>Đăng ký</Text>
+          </TouchableOpacity>
+        </View>
+      </ScrollView>
+    </View>
+    
   );
 };
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
-    // backgroundColor: "",
     backgroundColor: "rgba(251,251,223,255)",
-    alignItems: "center",
+    paddingHorizontal: 20,
+    paddingTop: 10
+  },
+  scroll: {
+    height: "100%",
   },
   logoContainer: {
     flex: 1,
     alignItems: "center",
     // marginBottom: -50,
+    // position: "relative",
+    // // flexDirection: "row",
+    // justifyContent: "center",
+    // alignItems: "center",
+    // backgroundColor: "rgba(251,251,223,255)",
+    // zIndex: 1,
   },
   formContainer: {
-    flex: 1,
-    width: "80%",
-    alignItems: "center",
-    // marginTop: -200
+    marginTop: 250
   },
   input: {
     width: "100%",
     height: 50,
-    borderWidth: 1,
+    borderWidth: 1, 
     borderColor: "#ccc",
     borderRadius: 5,
     marginBottom: 10,

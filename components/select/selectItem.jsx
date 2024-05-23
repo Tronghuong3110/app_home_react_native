@@ -1,41 +1,29 @@
 import { StyleSheet, Text, View, TextInput } from "react-native";
 import React, { useState } from "react";
-import { Picker } from "@react-native-picker/picker";
+import RNPickerSelect from "react-native-picker-select";
 
-const SelectItem = () => {
-  const [selectedValue, setSelectedValue] = useState("");
+const SelectItem = ({ setTypeProduct }) => {
 
-  const handleValueChange = (itemValue) => {
-    setSelectedValue(itemValue);
-  };
+  const items = [
+    { value: "ID-16.000", label: "Hàng 46 ngắn"},
+    { value: "Hàng 46 dài", label: "Hàng 46 dài" },
+    { value: "Hàng chân phích", label: "Hàng chân phích" },
+    { value: "Hàng cực ổ 52", label: "Hàng cực ổ 52" },
+    { value: "Hàng phích âm", label: "Hàng phích âm" },
+    { value: "Hàng cực ổ 48", label: "Hàng cực ổ 48" },
+  ];
+  const valueDefault = {label: "Chọn loại hàng", value: null};
 
   return (
     <View style={styles.container}>
       <Text style={styles.label}>Chọn loại loại hàng:</Text>
-      <View style={styles.selectWrapper}>
-        <Picker
-          selectedValue={selectedValue}
-          onValueChange={handleValueChange}
-          style={styles.select}
-        >
-          {/* <Picker.Item label="Hàng 46 ngắn" value="46n" /> */}
-          <Picker.Item key={1} value="Hàng 46 ngắn" label="Hàng 46 ngắn" />
-          <Picker.Item value="Hàng 46 dài" label="Hàng 46 dài" />
-          <Picker.Item value="Hàng chân phích" label="Hàng chân phích" />
-          <Picker.Item value="Hàng cực ổ 52" label="Hàng cực ổ 52" />
-          <Picker.Item value="Hàng phích âm" label="Hàng phích âm" />
-          <Picker.Item value="Hàng cực ổ 48" label="Hàng cực ổ 48" />
-        </Picker>
-      </View>
-      {/* <Text style={styles.selectionText}>Selected value: {selectedValue}</Text> */}
-      {/* <TextInput 
-        style={styles.selectionText}
-        value= {selectedValue}
-        keyboardType="ascii-capable"
-        editable={false} 
-        // selectTextOnFocus={false}
-        placeholder="Loại hàng"
-        /> */}
+    {/* Select  */}
+      <RNPickerSelect 
+        style={styles.select}
+        onValueChange={(value) => setTypeProduct(value)}
+        items={items}
+        placeholder = {valueDefault}
+      />
     </View>
   );
 };
@@ -47,19 +35,21 @@ const styles = StyleSheet.create({
     display: "flex",
     flex: 1,
     // padding: 16,
+    // zIndex: 1,
     justifyContent: "center",
   },
   label: {
     fontSize: 16,
     marginBottom: 8,
     marginTop: 10,
-    fontWeight: "bold"
+    fontWeight: "bold",
   },
   select: {
-    height: 40,
+    // height: 40,
     borderWidth: 1,
     borderColor: "#ccc",
     borderRadius: 4,
+    // zIndex: 1
     // borderWidth: 1,
     // borderColor: "#ccc",
     // borderRadius: 5,
@@ -75,11 +65,11 @@ const styles = StyleSheet.create({
   },
   selectWrapper: {
     flex: 1,
-    justifyContent: "center",
+    // justifyContent: "center",
     height: 45,
     borderWidth: 1,
-    borderColor: '#ccc',
+    borderColor: "#ccc",
     borderRadius: 4,
-    overflow: 'hidden',
+    overflow: "hidden",
   },
 });

@@ -28,8 +28,9 @@ const Home = () => {
   const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
   const [showListWeight, setShowListWeight] = useState(false); // Sửa lại từ useEffect
   const [monthYear, setMonthYear] = useState("04/2024");
+  const [price, setPrice] = useState("0")
+  const [typeProduct, setTypeProduct] = useState();
  
-  // function
   const handleConfirmDate = (selectedDate) => {
     const formattedDate = formatDate(selectedDate);
     setDate(formattedDate);
@@ -45,7 +46,8 @@ const Home = () => {
   };
 
   const handleSave = () => {
-    alert("Save info");
+    // alert("Save info");
+    console.log(typeProduct);
   };
 
   const handleLogout = () => {
@@ -70,6 +72,16 @@ const Home = () => {
     // });
     alert("Show list weight in month");
   };
+  const handleSetPrice = (value) => {
+    if(value == null) {
+      setPrice(0);
+    }
+    else {
+      const tmp = value.split('-');
+      setTypeProduct(tmp[0]);
+      setPrice(tmp[1]==undefined ? 0 : tmp[1]);
+    }
+  }
 
   return (
     <View style={styles.container}>
@@ -105,7 +117,8 @@ const Home = () => {
             onCancel={hideDatePicker}
           />
           {/* Chọn loại hàng */}
-          <SelectItem />
+          <SelectItem setTypeProduct = {handleSetPrice} />
+          <Text style={styles.label}>Đơn giá (VND): {price}</Text>
 
           <Text style={styles.label}>Khối lượng (kg):</Text>
           <TextInput
@@ -137,9 +150,11 @@ const styles = StyleSheet.create({
   container: {
     backgroundColor: "rgba(251,251,223,255)",
     paddingHorizontal: 20,
-    paddingTop: 10
+    paddingTop: 10,
+    // height: "100%"
   },
   scroll: {
+    // flex: 1,
     height: "100%",
   },
   headerMenuContainer: {
@@ -197,6 +212,9 @@ const styles = StyleSheet.create({
     color: "#ffffff",
     fontWeight: "500",
   },
+  select: {
+    zIndex: 1
+  }
 });
 
 const formatDate = (date) => {

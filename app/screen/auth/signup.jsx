@@ -21,18 +21,18 @@ const SignUp = () => {
   };
 
   const handleSignUp = () => {
-    createUser(name, phoneNumber);
-    // if() {
-    navigation.reset({
-      index: 0,
-      routes: [
-        {
-          name: "home",
-          params: [name, phoneNumber],
-        },
-      ],
-    });
-    // }
+    const checkCreateUser = createUser(name, phoneNumber);
+    if (checkCreateUser) {
+      navigation.reset({
+        index: 0,
+        routes: [
+          {
+            name: "home",
+            params: [name, phoneNumber],
+          },
+        ],
+      });
+    }
   };
 
   return (
