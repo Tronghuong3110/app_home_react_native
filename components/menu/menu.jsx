@@ -1,11 +1,11 @@
-import HomeAdmin from '@/app/screen/admin/home';
+import HomeAdmin from '../admin/homeAdmin';
 import { useNavigation } from '@react-navigation/native';
 import React, { useState } from 'react';
 import { View, Text, TouchableOpacity, FlatList, StyleSheet, Dimensions } from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import ManagerTypeProduct from '../admin/managerProduct';
 import Statistic from '../admin/statistic';
+import ManagerProductType from '../admin/managerProduct';
 
 const Menu = ( { choosenComponent }) => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -13,27 +13,21 @@ const Menu = ( { choosenComponent }) => {
 
   const menuItems = [
     { id: "home-admin", title: 'Trang chủ', component: <HomeAdmin/> },
-    { id: "manager-product", title: 'Quản lý sản phẩm', component: <ManagerTypeProduct/> },
+    { id: "manager-product", title: 'Quản lý sản phẩm', component: <ManagerProductType/> },
     { id: "statistic", title: 'Thống kê', component: <Statistic/> }
   ];
 
   const openMenu = () => {
     setIsMenuOpen(!isMenuOpen);
   };
-  const switchComponent = (nameComponent) => {
-    // // navigation.navigate(nameComponent);
-    // navigation.reset({
-    //   index: 0,
-    //   routes: [
-    //     {
-    //       name: nameComponent
-    //     }
-    //   ]
-    // })
+  const switchComponent = (componentName) => {
+    // console.log(componentName)
+    setIsMenuOpen(false)
+    choosenComponent(componentName)
   }
 
   const renderMenuItem = ({ item }) => (
-    <TouchableOpacity style={styles.menuItem} onPress={() => choosenComponent(item.component)}>
+    <TouchableOpacity style={styles.menuItem} onPress={() => switchComponent(item.component)}>
       <Text style={styles.menuItemText}>{item.title}</Text>
     </TouchableOpacity>
   );

@@ -84,7 +84,6 @@ const Login = () => {
         </View>
       </ScrollView>
     </View>
-    
   );
 };
 

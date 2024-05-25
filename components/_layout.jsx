@@ -2,7 +2,7 @@ import { createStackNavigator } from "@react-navigation/stack";
 import React from "react";
 import SignUp from "../app/screen/auth/signup";
 import LogIn from "../app/screen/auth/login";
-import Home from "../app/screen/home/home";
+import Home from "../app/screen/user/home";
 import HomeAdmin from "../app/screen/admin/home";
 import ManagerTypeProduct from "./admin/managerProduct";
 import Statistic from "./admin/statistic"
@@ -36,7 +36,7 @@ const RootLayout = () => {
         />
         <Stack.Screen
           name="home-admin"
-          component={Admin}
+          component={HomeAdmin}
           options={{ headerShown: false }}
         />
         <Stack.Screen

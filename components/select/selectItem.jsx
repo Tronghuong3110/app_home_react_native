@@ -2,27 +2,19 @@ import { StyleSheet, Text, View, TextInput } from "react-native";
 import React, { useState } from "react";
 import RNPickerSelect from "react-native-picker-select";
 
-const SelectItem = ({ setTypeProduct }) => {
-
-  const items = [
-    { value: "ID-16.000", label: "Hàng 46 ngắn"},
-    { value: "Hàng 46 dài", label: "Hàng 46 dài" },
-    { value: "Hàng chân phích", label: "Hàng chân phích" },
-    { value: "Hàng cực ổ 52", label: "Hàng cực ổ 52" },
-    { value: "Hàng phích âm", label: "Hàng phích âm" },
-    { value: "Hàng cực ổ 48", label: "Hàng cực ổ 48" },
-  ];
-  const valueDefault = {label: "Chọn loại hàng", value: null};
-
+const SelectItem = ({ setTypeProduct, title, items, defaultSelect }) => {
+  const [item, setItem] = useState(defaultSelect);
   return (
     <View style={styles.container}>
-      <Text style={styles.label}>Chọn loại loại hàng:</Text>
-    {/* Select  */}
-      <RNPickerSelect 
+      <Text style={styles.label}>{title}:</Text>
+      {/* Select  */}
+      <RNPickerSelect
         style={styles.select}
-        onValueChange={(value) => setTypeProduct(value)}
+        onValueChange={(value, index) => {
+          setTypeProduct(items[index]);
+        }}
         items={items}
-        placeholder = {valueDefault}
+        placeholder={{}}
       />
     </View>
   );
@@ -33,7 +25,7 @@ export default SelectItem;
 const styles = StyleSheet.create({
   container: {
     display: "flex",
-    flex: 1,
+    // flex: 1,
     // padding: 16,
     // zIndex: 1,
     justifyContent: "center",

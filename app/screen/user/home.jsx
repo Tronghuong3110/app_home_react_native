@@ -7,15 +7,15 @@ import {
   TouchableOpacity,
   TextInput,
 } from "react-native";
-import Menu from "../../../components/menu/menu";
 import Header from "../../../components/header/header";
 import React, { useState, useEffect, useCallback } from "react";
 import DateTimePickerModal from "react-native-modal-datetime-picker";
 import SelectItem from "../../../components/select/selectItem";
 import { useNavigation, useRoute } from "@react-navigation/native";
+import items from "../../../constants/listSelect"
 
 const Home = () => {
-  // variable 
+  // variable
   const params = useRoute().params;
   const name = params[0];
   const phoneNumber = params[1];
@@ -28,9 +28,9 @@ const Home = () => {
   const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
   const [showListWeight, setShowListWeight] = useState(false); // Sửa lại từ useEffect
   const [monthYear, setMonthYear] = useState("04/2024");
-  const [price, setPrice] = useState("0")
+  const [price, setPrice] = useState("0");
   const [typeProduct, setTypeProduct] = useState();
- 
+
   const handleConfirmDate = (selectedDate) => {
     const formattedDate = formatDate(selectedDate);
     setDate(formattedDate);
@@ -73,27 +73,16 @@ const Home = () => {
     alert("Show list weight in month");
   };
   const handleSetPrice = (value) => {
-    if(value == null) {
-      setPrice(0);
-    }
-    else {
-      const tmp = value.split('-');
-      setTypeProduct(tmp[0]);
-      setPrice(tmp[1]==undefined ? 0 : tmp[1]);
-    }
-  }
+    setTypeProduct(value.label);
+    setPrice(value.price == null ? 0 : value.price);
+  };
 
   return (
     <View style={styles.container}>
       <ScrollView style={styles.scroll}>
         <View style={styles.headerMenuContainer}>
-          {/* <View style={styles.menu}>
-            <Menu />
-            <Text>Menu</Text>
-          </View> */}
           <View style={styles.logo}>
             <Header />
-            {/* <Text>Logo</Text> */}
           </View>
 
           {/* <View> */}
@@ -117,7 +106,7 @@ const Home = () => {
             onCancel={hideDatePicker}
           />
           {/* Chọn loại hàng */}
-          <SelectItem setTypeProduct = {handleSetPrice} />
+          <SelectItem setTypeProduct={handleSetPrice} title={"Chọn loại hàng"} items={items}/>
           <Text style={styles.label}>Đơn giá (VND): {price}</Text>
 
           <Text style={styles.label}>Khối lượng (kg):</Text>
@@ -182,7 +171,7 @@ const styles = StyleSheet.create({
     paddingVertical: 5,
     borderRadius: 12,
     backgroundColor: "#ccc",
-    opacity: 0.7
+    opacity: 0.7,
   },
   logo: {
     position: "relative",
@@ -213,8 +202,8 @@ const styles = StyleSheet.create({
     fontWeight: "500",
   },
   select: {
-    zIndex: 1
-  }
+    zIndex: 1,
+  },
 });
 
 const formatDate = (date) => {

@@ -1,14 +1,14 @@
 import { StyleSheet, Text, View } from 'react-native'
 import React from 'react'
 
-const HomeAdmin = () => {
+const StatisticWeightByUser = () => {
   return (
     <View>
-      <Text>HomeAdmin</Text>
+      <Text>Thống kê khối lượng theo người</Text>
     </View>
   )
 }
 
-export default HomeAdmin;
+export default StatisticWeightByUser
 
 const styles = StyleSheet.create({})

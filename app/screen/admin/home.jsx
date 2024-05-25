@@ -1,22 +1,18 @@
 import { ScrollView, StyleSheet, Text, View } from "react-native";
 import React, { useState } from "react";
 
-import Header from "../admin/headerAdmin"
-import ManagerTypeProduct from "../../../components/admin/managerProduct";
-import Statistic from "../../../components/admin/statistic";
+import HeaderAdmin from "../../../components/admin/headerAdmin";
+import HomeAdmin from "../../../components/admin/homeAdmin";
 
 const Admin = () => {
-  const [componentName, setComponentName] = useState(<HomeAdmin/>);
+  const [componentName, setComponentName] = useState(<HomeAdmin />);
 
   return (
     <View style={styles.container}>
-      <View style={styles.scroll}>
-        {/* Header */}
-        <Header choosenComponent={setComponentName}/>
-
+      {/* Header */}
+      <HeaderAdmin choosenComponent={setComponentName} />
       {/* container */}
-      { componentName }
-      </View>
+      {componentName}
     </View>
   );
 };
@@ -28,10 +24,9 @@ const styles = StyleSheet.create({
     backgroundColor: "rgba(251,251,223,255)",
     paddingHorizontal: 20,
     paddingTop: 10,
-    // height: "100%"
-  },
-  scroll: {
-    // flex: 1,
     height: "100%",
   },
+  // scroll: {
+  //   height: "100%",
+  // },
 });

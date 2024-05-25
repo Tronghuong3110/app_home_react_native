@@ -4,7 +4,7 @@ import Menu from "@/components/menu/menu";
 import Header from "@/components/header/header";
 import { useNavigation, useRoute } from "@react-navigation/native";
 
-const HeaderAdmin = ( {setNameComponent}) => {
+const HeaderAdmin = ( {choosenComponent}) => {
   const navigation = useNavigation();
   const handleLogout = () => {
     navigation.reset({
@@ -13,10 +13,15 @@ const HeaderAdmin = ( {setNameComponent}) => {
     });
   };
 
+  const test = (nameComponent) => {
+    // console.log(nameComponent);
+    choosenComponent(nameComponent);
+  }
+
   return (
     <View style={styles.hearderContainer}>
       <View style={styles.menu}>
-        <Menu choosenComponent={setNameComponent}/>
+        <Menu choosenComponent={test}/>
       </View>
 
       <View style={styles.logo}>
