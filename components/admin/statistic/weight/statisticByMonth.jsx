@@ -1,25 +1,32 @@
-import { StyleSheet, Text, View } from "react-native";
-import React from "react";
+import { StyleSheet, Text, View, TouchableOpacity } from "react-native";
+import React, { useState } from "react";
 import TableCustom from "../../../table/table";
 import SelectMonthOfYear from "../../../select/selectMonth";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 const StatisticWeightByMonth = () => {
-  return (
-    <View>
-      <SelectMonthOfYear/>
+  const [month, setMonth] = useState("");
 
-      <TableCustom />
-    </View>
+  return (
+    <SafeAreaView style={ styles.select}>
+      <Text style={styles.lable}>Chọn tháng:</Text>
+      <SelectMonthOfYear setMonth={setMonth} />
+
+      <TableCustom month={month} />
+    </SafeAreaView>
   );
 };
 
 export default StatisticWeightByMonth;
 
 const styles = StyleSheet.create({
-  container: {
-    // flex: 1,
-    // padding: 16,
-    // paddingTop: 30,
-    // backgroundColor: "#fff"
+  select: {
+    // marginTop: -30
+
+  },
+  lable: {
+    fontSize: 16,
+    fontWeight: "bold",
+    // marginVertical: 10,
   },
 });

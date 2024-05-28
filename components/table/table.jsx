@@ -8,7 +8,7 @@ import {
   Col,
 } from "react-native-table-component";
 
-const TableCustom = () => {
+const TableCustom = ( { month }) => {
   const [tableHead, setTableHead] = useState(["Tên hàng", "Khối lượng"]);
   const [data, setData] = useState([
     ["1", "2"],

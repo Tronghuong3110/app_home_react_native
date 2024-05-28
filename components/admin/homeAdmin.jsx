@@ -48,11 +48,11 @@ export default HomeAdmin;
 
 const styles = StyleSheet.create({
   subContainer: {
-    // flex: 0.5,
     paddingHorizontal: 20,
     backgroundColor: "#ffffff",
     paddingTop: 20,
     borderRadius: 10,
+    // position: "absolute"
   },
   label: {
     fontSize: 16,

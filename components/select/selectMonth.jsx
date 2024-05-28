@@ -1,44 +1,48 @@
-import React, { useState, useCallback } from 'react';
-import { View, SafeAreaView, Text, TouchableOpacity } from 'react-native';
-import MonthPicker from 'react-native-month-year-picker';
+import { useMemo, useState } from "react";
+import { StyleSheet } from "react-native";
+import RNPickerSelect from "react-native-picker-select";
 
-const SelectMonthOfYear = () => {
-  const [date, setDate] = useState(new Date());
-  const [show, setShow] = useState(false);
+const SelectMonthOfYear = ( { setMonth }) => {
+  const [selectedMonthYear, setSelectedMonthYear] = useState(new Date());
 
-  const showPicker = useCallback((value) => setShow(value), []);
-
-  const onValueChange = (event, newDate) => {
-    switch(event) {
-      case ACTION_DATE_SET:
-        onSuccess(newDate);
-        break;
-      case ACTION_NEUTRAL:
-        onNeutral(newDate);
-        break;
-      case ACTION_DISMISSED:
-      default:
-        onCancel(); //when ACTION_DISMISSED new date will be undefined
+  const monthYearItems = useMemo(() => {
+    const currentYear = new Date().getFullYear();
+    const items = [];
+    for (let month = 0; month < 12; month++) {
+      const date = new Date(currentYear, month, 1);
+      const monthYearLabel = date
+        .toLocaleString("default", { month: "2-digit", year: "numeric" })
+        .replace(/\//g, "-");
+      const monthYearValue = date.toLocaleString("default", {
+        month: "2-digit",
+        year: "numeric",
+      });
+      const parts = monthYearValue.split(", ");
+      const monthTmp = parts[0].replace("tháng ", "").padStart(2, "0");
+      const yearTmp = parts[1];
+      const formattedDate = `${monthTmp}/${yearTmp}`;
+      items.push({
+        label: monthYearLabel,
+        value: formattedDate,
+      });
     }
-  }
+
+    return items;
+  }, [selectedMonthYear]);
+
+  const handleMonthYearChange = (value) => {
+    setMonth(value);
+  };
 
   return (
-    <SafeAreaView>
-      <Text>Month Year Picker Example</Text>
-      {/* <Text>{moment(date, "MM-YYYY")}</Text> */}
-      <TouchableOpacity onPress={() => showPicker(true)}>
-        <Text>OPEN</Text>
-      </TouchableOpacity>
-      {show && (
-        <MonthPicker
-          onChange={onValueChange}
-          value={date}
-          minimumDate={new Date()}
-          maximumDate={new Date(2025, 5)}
-          locale="ko"
-        />
-      )}
-    </SafeAreaView>
+    <RNPickerSelect
+      onValueChange={handleMonthYearChange}
+      items={monthYearItems}
+      placeholder={{
+        label: "Chọn tháng/năm",
+        value: null,
+      }}
+    />
   );
 };
 
