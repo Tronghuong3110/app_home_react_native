@@ -2,6 +2,7 @@ import StatisticWeightByMonth from "../components/admin/statistic/weight/statist
 import StatisticWeightByUser from "../components/admin/statistic/weight/statisticByUser"
 import StatisticSalaryByMonth from "../components/admin/statistic/salary/statisticByMonth"
 import StatisticSalaryByUser from "../components/admin/statistic/salary/statisticByUser"
+import { getAllProductType } from "@/lib/appwrite"
 
 const chooses = [
   {
@@ -26,14 +27,15 @@ const chooses = [
   }
 ];
 
-const items = [
-  { value: "ID", label: "Hàng 46 ngắn", price: 16.0 },
-  { value: "Hàng 46 dài", label: "Hàng 46 dài", price: 16.0 },
-  { value: "Hàng chân phích", label: "Hàng chân phích", price: 16.0 },
-  { value: "Hàng cực ổ 52", label: "Hàng cực ổ 52", price: 16.0 },
-  { value: "Hàng phích âm", label: "Hàng phích âm", price: 16.0 },
-  { value: "Hàng cực ổ 48", label: "Hàng cực ổ 48", price: 16.0 },
-];
+// const items = [
+//   { value: "ID", label: "Hàng 46 ngắn", price: 16.0 },
+//   { value: "Hàng 46 dài", label: "Hàng 46 dài", price: 16.0 },
+//   { value: "Hàng chân phích", label: "Hàng chân phích", price: 16.0 },
+//   { value: "Hàng cực ổ 52", label: "Hàng cực ổ 52", price: 16.0 },
+//   { value: "Hàng phích âm", label: "Hàng phích âm", price: 16.0 },
+//   { value: "Hàng cực ổ 48", label: "Hàng cực ổ 48", price: 16.0 },
+// ]; 
 
+const items = getAllProductType();  
 
-export default { chooses, items };
+export default { chooses, items }; 

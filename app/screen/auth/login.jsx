@@ -31,9 +31,9 @@ const Login = () => {
     } else {
       console.log(user.role)
       const route = {
-        // name: user.role == "USER" ? "home" : "home-admin",
-        name: user.role == "USER" ? "home-admin" : "home",
-        params: [user.name, phoneNumber],
+        name: user.role == "USER" ? "home" : "home-admin",
+        // name: user.role == "USER" ? "home-admin" : "home",
+        params: [user.name, phoneNumber, user.id],
       };
       navigation.reset({
         index: 0,
@@ -42,16 +42,6 @@ const Login = () => {
         ],
       });
     }
-    // });
-    // navigation.reset({
-    //   index: 0,
-    //   routes: [
-    //     {
-    //       name: "home-admin",
-    //       params: ["Huong", phoneNumber]
-    //     }
-    //   ]
-    // })
   };
 
   const handelSignUp = () => {

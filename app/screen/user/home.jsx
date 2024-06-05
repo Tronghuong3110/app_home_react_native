@@ -12,24 +12,37 @@ import React, { useState, useEffect, useCallback } from "react";
 import DateTimePickerModal from "react-native-modal-datetime-picker";
 import SelectItem from "../../../components/select/selectItem";
 import { useNavigation, useRoute } from "@react-navigation/native";
-import items from "../../../constants/listSelect"
+import {
+  getAllProductType,
+  createWeightOfUser,
+  getListWeightOdUserByMonth,
+} from "@/lib/appwrite";
+import Loading from "@/components/loading/loading";
 
 const Home = () => {
   // variable
   const params = useRoute().params;
   const name = params[0];
-  const phoneNumber = params[1];
+  const userId = params[2];
   const [date, setDate] = useState("dd/MM/yyyy");
-  const [weights, setWeights] = useState([]);
-  const [weight, setWeight] = useState("");
-  const [totalWeight, setTotalWeight] = useState(0);
-  const pricePerKg = 10;
+  const [weight, setWeight] = useState(0);
   const navigation = useNavigation();
   const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
-  const [showListWeight, setShowListWeight] = useState(false); // Sửa lại từ useEffect
-  const [monthYear, setMonthYear] = useState("04/2024");
-  const [price, setPrice] = useState("0");
+  const [price, setPrice] = useState(0);
   const [typeProduct, setTypeProduct] = useState();
+  const [spinner, setSpinner] = useState(false);
+
+  const [totalPrice, settotalPrice] = useState(0);
+  const [totalWeight, setTotalWeight] = useState(0);
+  const [isUpdateTotal, setIsUpdateTotal] = useState(false);
+
+  const [items, setItems] = useState([
+    {
+      value: null,
+      label: "Chọn loại hàng",
+      price: 0,
+    },
+  ]);
 
   const handleConfirmDate = (selectedDate) => {
     const formattedDate = formatDate(selectedDate);
@@ -45,9 +58,42 @@ const Home = () => {
     setDatePickerVisibility(false);
   };
 
-  const handleSave = () => {
-    // alert("Save info");
-    console.log(typeProduct);
+  // lưu thông tin hàng vào database
+  const handleSave = async () => {
+    // Lấy ngày, lấy loại hàng, lấy khối lượng, lấy số điện thoại
+    if (
+      date == "dd/MM/yyyy" ||
+      weight == "" ||
+      typeProduct == null ||
+      price == 0
+    ) {
+      alert("Vui lòng điền đầy đủ thông tin !!");
+      return;
+    } else {
+      setSpinner(true);
+      const handleSaveWeight = await createWeightOfUser(
+        date,
+        userId,
+        weight,
+        typeProduct,
+        price
+      );
+      setSpinner(false);
+      if (handleSaveWeight == true) {
+        // TH ngày lưu vẫn nằm trong tháng hiện tại
+        if (date.includes(getCurrentMonth())) {
+          setTotalWeight(totalWeight + weight);
+          settotalPrice(totalPrice + weight * price);
+        } else {
+          setIsUpdateTotal(!isUpdateTotal);
+        }
+        alert("Thành công !!");
+        setDate("dd/MM/yyyy");
+        setWeight("");
+      } else {
+        alert("Lưu thất bại !!");
+      }
+    }
   };
 
   const handleLogout = () => {
@@ -55,30 +101,56 @@ const Home = () => {
       index: 0,
       routes: [{ name: "sign-in" }],
     });
-    // alert("Logout");
   };
 
   const handleShowList = () => {
-    // navigation.reset({
-    //   index: 0,
-    //   routes: [
-    //     {
-    //       name: "ListWeight",
-    //       params: {
-    //         date: monthYear,
-    //       },
-    //     },
-    //   ],
-    // });
-    alert("Show list weight in month");
+    navigation.reset({
+      index: 0,
+      routes: [
+        {
+          name: "show-list",
+          params: [userId, items, name],
+        },
+      ],
+    });
   };
+
   const handleSetPrice = (value) => {
-    setTypeProduct(value.label);
+    setTypeProduct(value.value);
     setPrice(value.price == null ? 0 : value.price);
   };
 
+  // lấy danh sách các loại hàng
+  useEffect(() => {
+    const fetchData = async () => {
+      const productTypes = await getAllProductType();
+      setItems([
+        {
+          label: "Chọn loại hàng",
+          value: null,
+          price: 0,
+        },
+        ...productTypes,
+      ]);
+    };
+    fetchData();
+  }, []);
+
+  // lấy tổng tiền đã làm được trong tháng
+  useEffect(() => {
+    setSpinner(true);
+    const getTotalPrice = async () => {
+      const data = await getListWeightOdUserByMonth(getCurrentMonth(), userId);
+      settotalPrice(data.totalPrice);
+      setTotalWeight(data.totalWeight);
+      setSpinner(false);
+    };
+    getTotalPrice();
+  }, [isUpdateTotal]);
+
   return (
     <View style={styles.container}>
+      <Loading spinnerDefault={spinner} />
       <ScrollView style={styles.scroll}>
         <View style={styles.headerMenuContainer}>
           <View style={styles.logo}>
@@ -105,8 +177,16 @@ const Home = () => {
             onConfirm={handleConfirmDate}
             onCancel={hideDatePicker}
           />
+
           {/* Chọn loại hàng */}
-          <SelectItem setTypeProduct={handleSetPrice} title={"Chọn loại hàng"} items={items}/>
+          {/* <View style = {styles.select}> */}
+          <SelectItem
+            setTypeProduct={handleSetPrice}
+            title={"Chọn loại hàng"}
+            items={items}
+          />
+          {/* </View> */}
+
           <Text style={styles.label}>Đơn giá (VND): {price}</Text>
 
           <Text style={styles.label}>Khối lượng (kg):</Text>
@@ -121,11 +201,13 @@ const Home = () => {
             <Text style={styles.text}>Lưu</Text>
           </TouchableOpacity>
           <TouchableOpacity style={styles.btn} onPress={handleShowList}>
-            <Text style={styles.text}>Xem danh trong tháng</Text>
+            <Text style={styles.text}>Xem danh chi tiết</Text>
           </TouchableOpacity>
-          <Text style={styles.label}>Tổng khối lượng: {totalWeight} kg</Text>
           <Text style={styles.label}>
-            Tổng tiền: {totalWeight * pricePerKg} VND
+            Tổng tiền khối lượng trong tháng: {totalWeight} KG
+          </Text>
+          <Text style={styles.label}>
+            Tổng tiền trong tháng: {totalPrice} VND
           </Text>
         </View>
       </ScrollView>
@@ -201,9 +283,6 @@ const styles = StyleSheet.create({
     color: "#ffffff",
     fontWeight: "500",
   },
-  select: {
-    zIndex: 1,
-  },
 });
 
 const formatDate = (date) => {
@@ -214,4 +293,13 @@ const formatDate = (date) => {
     month >= 10 ? month : "0" + month
   }/${year}`;
   return formattedDate;
+};
+
+const getCurrentMonth = () => {
+  const currentDate = new Date();
+  const currentMonth = currentDate.getMonth() + 1;
+  const currentYear = currentDate.getFullYear();
+  return `${
+    currentMonth >= 10 ? currentMonth : "0" + currentMonth
+  }/${currentYear}`;
 };
