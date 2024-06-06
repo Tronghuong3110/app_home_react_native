@@ -26,7 +26,4 @@ const styles = StyleSheet.create({
     paddingTop: 10,
     height: "100%",
   },
-  // scroll: {
-  //   height: "100%",
-  // },
 });

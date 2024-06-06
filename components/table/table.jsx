@@ -9,14 +9,14 @@ import {
 } from "react-native-table-component";
 
 const TableCustom = ( { month }) => {
-  const [tableHead, setTableHead] = useState(["Tên hàng", "Khối lượng"]);
+  const [tableHead, setTableHead] = useState(["Ngày", "Tên hàng", "Khối lượng"]);
   const [data, setData] = useState([
-    ["1", "2"],
-    ["a", "b"],
-    ["1", "2"],
-    ["a", "b"],
+    ["05/06/2024", "Hàng 46 dài", "2"],
+    ["05/06/2024", "Chân phích", "2"],
+    ["05/06/2024", "Hàng phích âm", "2"],
+    ["05/06/2024", "1", "2"],
   ]);
-  const sizeCol = [2, 1];
+  const sizeCol = [1, 2, 1];
   return (
     <View style={styles.container}>
       <Table borderStyle={{ borderWidth: 1 }}>

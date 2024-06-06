@@ -15,8 +15,10 @@ import { useNavigation, useRoute } from "@react-navigation/native";
 import {
   getAllProductType,
   createWeightOfUser,
-  getListWeightOdUserByMonth,
+  getTotalPriceAndWeight,
 } from "@/lib/appwrite";
+import { getCurrentMonth } from "@/constants/date";
+import { formatMoney } from "@/constants/format";
 import Loading from "@/components/loading/loading";
 
 const Home = () => {
@@ -30,6 +32,7 @@ const Home = () => {
   const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
   const [price, setPrice] = useState(0);
   const [typeProduct, setTypeProduct] = useState();
+  const [nameProductType, setNameProductType] = useState("")
   const [spinner, setSpinner] = useState(false);
 
   const [totalPrice, settotalPrice] = useState(0);
@@ -76,14 +79,19 @@ const Home = () => {
         userId,
         weight,
         typeProduct,
-        price
+        price,
+        nameProductType
       );
       setSpinner(false);
       if (handleSaveWeight == true) {
         // TH ngày lưu vẫn nằm trong tháng hiện tại
         if (date.includes(getCurrentMonth())) {
+          const cleanedString = totalPrice.toString().replace(/₫/g, '');
+          const floatValue = parseFloat(cleanedString * 1000) + parseFloat(weight * price);
+          console.log(cleanedString);
+          console.log(floatValue);
           setTotalWeight(totalWeight + weight);
-          settotalPrice(totalPrice + weight * price);
+          settotalPrice(formatMoney(floatValue));
         } else {
           setIsUpdateTotal(!isUpdateTotal);
         }
@@ -117,8 +125,14 @@ const Home = () => {
 
   const handleSetPrice = (value) => {
     setTypeProduct(value.value);
+    setNameProductType(value.label)
     setPrice(value.price == null ? 0 : value.price);
   };
+
+  const handleSetWeight = (weight) => {
+    weight = weight.includes(",") ? weight.replace(",", ".") : weight;
+    setWeight(parseFloat(weight));
+  }
 
   // lấy danh sách các loại hàng
   useEffect(() => {
@@ -140,7 +154,7 @@ const Home = () => {
   useEffect(() => {
     setSpinner(true);
     const getTotalPrice = async () => {
-      const data = await getListWeightOdUserByMonth(getCurrentMonth(), userId);
+      const data = await getTotalPriceAndWeight(getCurrentMonth(), userId);
       settotalPrice(data.totalPrice);
       setTotalWeight(data.totalWeight);
       setSpinner(false);
@@ -155,7 +169,7 @@ const Home = () => {
         <View style={styles.headerMenuContainer}>
           <View style={styles.logo}>
             <Header />
-          </View>
+          </View> 
 
           {/* <View> */}
           <TouchableOpacity style={styles.logout} onPress={handleLogout}>
@@ -193,7 +207,7 @@ const Home = () => {
           <TextInput
             style={styles.input}
             value={weight}
-            onChangeText={setWeight}
+            onChangeText={handleSetWeight}
             keyboardType="numeric"
             placeholder="Khối lượng(Kg)"
           />
@@ -204,7 +218,7 @@ const Home = () => {
             <Text style={styles.text}>Xem danh chi tiết</Text>
           </TouchableOpacity>
           <Text style={styles.label}>
-            Tổng tiền khối lượng trong tháng: {totalWeight} KG
+            Tổng tiền khối lượng trong tháng: {totalWeight} kg
           </Text>
           <Text style={styles.label}>
             Tổng tiền trong tháng: {totalPrice} VND
@@ -282,6 +296,7 @@ const styles = StyleSheet.create({
   text: {
     color: "#ffffff",
     fontWeight: "500",
+    fontSize: 18
   },
 });
 
@@ -295,11 +310,3 @@ const formatDate = (date) => {
   return formattedDate;
 };
 
-const getCurrentMonth = () => {
-  const currentDate = new Date();
-  const currentMonth = currentDate.getMonth() + 1;
-  const currentYear = currentDate.getFullYear();
-  return `${
-    currentMonth >= 10 ? currentMonth : "0" + currentMonth
-  }/${currentYear}`;
-};
