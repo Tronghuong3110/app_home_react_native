@@ -7,29 +7,36 @@ import {
   Text,
   ScrollView,
   SafeAreaView,
+  Image,
 } from "react-native";
 import Logo from "../auth/logo";
+import base64 from "react-native-base64";
 import { checkExistsPhoneNumber } from "@/lib/appwrite";
 import { useNavigation } from "@react-navigation/native";
-import Loading from '../../../components/loading/loading';
+import Loading from "../../../components/loading/loading";
+import images from "@/constants/images";
 
 const Login = () => {
   const [phoneNumber, setPhoneNumber] = useState("");
   const [spinner, setSpinner] = useState(false);
-  
+  const [password, setpassword] = useState("");
   const navigation = useNavigation();
+  const [passwordVisible, setPasswordVisible] = useState(false);
+
+  const togglePasswordVisibility = () => {
+    setPasswordVisible(!passwordVisible);
+  };
   const handleLogin = async () => {
     if (phoneNumber == "") {
       alert("Vui lòng nhập đẩy đủ thông tin!!");
       return;
-    } 
+    }
     setSpinner(!spinner);
-    const user = await checkExistsPhoneNumber(phoneNumber);
+    const user = await checkExistsPhoneNumber(phoneNumber, password);
     setSpinner(false);
     if (user == null) {
-      alert("Số điện thoại không đúng!!");
+      alert("Số điện thoại hoặc mật khẩu không đúng !!");
     } else {
-      console.log(user.role)
       const route = {
         name: user.role == "USER" ? "home" : "home-admin",
         // name: user.role == "USER" ? "home-admin" : "home",
@@ -37,9 +44,7 @@ const Login = () => {
       };
       navigation.reset({
         index: 0,
-        routes: [
-          route
-        ],
+        routes: [route],
       });
     }
   };
@@ -48,12 +53,16 @@ const Login = () => {
     navigation.navigate("sign-up");
   };
 
+  const updatetPass = (value) => {
+    setpassword(base64.encode(value));
+  };
+
   return (
     <View style={styles.container}>
-      <Loading spinnerDefault = {spinner}/>
+      <Loading spinnerDefault={spinner} />
       <ScrollView style={styles.scroll}>
         <View style={styles.logoContainer}>
-          <Logo />
+          <Logo/>
         </View>
 
         <View style={styles.formContainer}>
@@ -64,6 +73,25 @@ const Login = () => {
             placeholder="Số điện thoại"
             keyboardType="numeric"
           />
+
+          {/* input pass */}
+          <View style={[styles.inputPass]}>
+            <TextInput
+              style={styles.input}
+              secureTextEntry={!passwordVisible}
+              placeholder="Mật khẩu"
+              onChangeText={updatetPass}
+            />
+            <TouchableOpacity
+              onPress={togglePasswordVisibility}
+              style={styles.toggleIcon}
+            >
+              <Image
+                source={passwordVisible ? images.hiden_pass : images.view_pass}
+                style={styles.toggleImage}
+              />
+            </TouchableOpacity>
+          </View>
 
           <TouchableOpacity style={styles.button} onPress={handleLogin}>
             <Text style={styles.buttonText}>Đăng nhập</Text>
@@ -81,7 +109,7 @@ const styles = StyleSheet.create({
   container: {
     backgroundColor: "rgba(251,251,223,255)",
     paddingHorizontal: 20,
-    paddingTop: 10
+    paddingTop: 10,
   },
   scroll: {
     height: "100%",
@@ -89,21 +117,14 @@ const styles = StyleSheet.create({
   logoContainer: {
     flex: 1,
     alignItems: "center",
-    // marginBottom: -50,
-    // position: "relative",
-    // // flexDirection: "row",
-    // justifyContent: "center",
-    // alignItems: "center",
-    // backgroundColor: "rgba(251,251,223,255)",
-    // zIndex: 1,
   },
   formContainer: {
-    marginTop: 250
+    marginTop: 250,
   },
   input: {
     width: "100%",
     height: 50,
-    borderWidth: 1, 
+    borderWidth: 1,
     borderColor: "#ccc",
     borderRadius: 5,
     marginBottom: 10,
@@ -123,6 +144,21 @@ const styles = StyleSheet.create({
     color: "#fff",
     fontSize: 16,
     fontWeight: "bold",
+  },
+  inputPass: {
+    position: "relative",
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center"
+  },
+  toggleIcon: {
+    position: "absolute",
+    right: 10,
+    top: 12
+  },
+  toggleImage: {
+    width: 25,
+    height: 25,
   },
 });
 

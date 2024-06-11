@@ -1,18 +1,56 @@
 import { StyleSheet, Text, View, TouchableOpacity } from "react-native";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import TableCustom from "../../../table/table";
-import SelectMonthOfYear from "../../../select/selectMonth";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { getListMonthYear, getCurrentMonth } from "@/constants/date";
+import SelectItem from "@/components/select/selectItem";
+import { getAllWeightByMonthAndGroupByProductType } from "@/lib/appwrite";
+import Loading from "@/components/loading/loading";
 
 const StatisticWeightByMonth = () => {
-  const [month, setMonth] = useState("");
+  const [month, setMonth] = useState(null);
+  const [spinner, setSpinner] = useState(false);
+  const [monthYears, setMonthYears] = useState([
+    {
+      label: "Chọn tháng",
+      value: getCurrentMonth(),
+    },
+  ]);
+  const [data, setData] = useState([]);
+  const handleSetMonth = (value) => {
+    setMonth(value.value);
+  };
+  useEffect(() => {
+    const listYear = getListMonthYear();
+    setMonthYears([...monthYears, ...listYear]);
+  }, []);
+
+  useEffect(() => {
+    setSpinner(true);
+    const getAllWeight = async () => {
+      const weights = await getAllWeightByMonthAndGroupByProductType(
+        month
+      );
+      setData(weights);
+      setSpinner(false);
+    };
+    getAllWeight();
+  }, [month]);
 
   return (
-    <SafeAreaView style={ styles.select}>
-      <Text style={styles.lable}>Chọn tháng:</Text>
-      <SelectMonthOfYear setMonth={setMonth} />
-
-      <TableCustom month={month} />
+    <SafeAreaView>
+      <Loading spinnerDefault={spinner} />
+      <SelectItem
+        setTypeProduct={handleSetMonth}
+        title={"Chọn tháng"}
+        items={monthYears}
+      />
+      <TableCustom
+        month={month}
+        data={data}
+        statisticType={1}
+        title={"Thống kê khối lượng hàng trong tháng "}
+      />
     </SafeAreaView>
   );
 };
@@ -20,13 +58,8 @@ const StatisticWeightByMonth = () => {
 export default StatisticWeightByMonth;
 
 const styles = StyleSheet.create({
-  select: {
-    // marginTop: -30
-
-  },
   lable: {
     fontSize: 16,
     fontWeight: "bold",
-    // marginVertical: 10,
   },
 });

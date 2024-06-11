@@ -43,7 +43,7 @@ const Home = () => {
     {
       value: null,
       label: "Chọn loại hàng",
-      price: 0,
+      price: formatMoney(0),
     },
   ]);
 
@@ -124,9 +124,9 @@ const Home = () => {
   };
 
   const handleSetPrice = (value) => {
-    setTypeProduct(value.value);
+    setTypeProduct(value.value != null ? value.value : "");
     setNameProductType(value.label)
-    setPrice(value.price == null ? 0 : value.price);
+    setPrice(value.price == null ? formatMoney(0) : formatMoney(value.price));
   };
 
   const handleSetWeight = (weight) => {

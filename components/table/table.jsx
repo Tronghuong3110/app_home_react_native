@@ -1,5 +1,5 @@
-import React, { Component, useState } from "react";
-import { StyleSheet, View } from "react-native";
+import React, { useEffect, useState } from "react";
+import { StyleSheet, Text, View } from "react-native";
 import {
   Table,
   TableWrapper,
@@ -8,17 +8,34 @@ import {
   Col,
 } from "react-native-table-component";
 
-const TableCustom = ( { month }) => {
-  const [tableHead, setTableHead] = useState(["Ngày", "Tên hàng", "Khối lượng"]);
-  const [data, setData] = useState([
-    ["05/06/2024", "Hàng 46 dài", "2"],
-    ["05/06/2024", "Chân phích", "2"],
-    ["05/06/2024", "Hàng phích âm", "2"],
-    ["05/06/2024", "1", "2"],
+const TableCustom = ({ month, data, statisticType, title }) => {
+  const [tableHead, setTableHead] = useState([
+    "Tên hàng",
+    "Khối Lượng",
+    "Tổng tiền",
   ]);
-  const sizeCol = [1, 2, 1];
+  const [sizeCol, setSizeCol] = useState([2, 1, 1]);
+
+  useEffect(() => {
+    switch (statisticType) {
+      case 1:
+        setTableHead(["Tên hàng", "Khối Lượng", "Tổng tiền"]);
+        setSizeCol([2, 1, 1]);
+        break;
+      case 2:
+        setTableHead(["Tên người", "Tên hàng", "Khối lượng"]);
+        setSizeCol([2, 2, 1]);
+        break;
+      case 3:
+        setTableHead(["Tên người", "Tên hàng", "Khối lượng", "Tổng tiền"]);
+        setSizeCol([2, 2, 1, 1]);
+        break;
+    }
+  }, []);
+
   return (
     <View style={styles.container}>
+      <Text style={styles.lable}>{title} {month}</Text>
       <Table borderStyle={{ borderWidth: 1 }}>
         <Row
           data={tableHead}
@@ -59,10 +76,14 @@ const styles = StyleSheet.create({
   text: {
     textAlign: "center",
   },
-    // container: {
-    //   flex: 1,
-    //   padding: 16,
-    //   paddingTop: 30,
-    //   backgroundColor: "#fff"
-    // },
+  container: {
+    paddingTop: 30,
+  },
+  lable: {
+    color: "#000",
+    fontWeight: "600",
+    textAlign: "center",
+    fontSize: 22,
+    paddingBottom: 15
+  },
 });
