@@ -16,7 +16,6 @@ const HomeAdmin = () => {
       setTypeProduct(value.label);
       setPrice(value.price==null ? 0 : value.price);
       setComponentName(value.component);
-      console.log(value)
   }
 
   const handleConfirmDate = (selectedDate) => {

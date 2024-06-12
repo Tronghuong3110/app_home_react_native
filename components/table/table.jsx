@@ -19,16 +19,16 @@ const TableCustom = ({ month, data, statisticType, title }) => {
   useEffect(() => {
     switch (statisticType) {
       case 1:
-        setTableHead(["Tên hàng", "Khối Lượng", "Tổng tiền"]);
+        setTableHead(["Tên hàng", "Khối Lượng", "Tổng tiền"]); // ok
         setSizeCol([2, 1, 1]);
         break;
       case 2:
-        setTableHead(["Tên người", "Tên hàng", "Khối lượng"]);
+        setTableHead(["Tên người", "Tên hàng", "Khối lượng"]); // ok
         setSizeCol([2, 2, 1]);
         break;
       case 3:
         setTableHead(["Tên người", "Tên hàng", "Khối lượng", "Tổng tiền"]);
-        setSizeCol([2, 2, 1, 1]);
+        setSizeCol([0.7, 1, 0.5, 1]);
         break;
     }
   }, []);

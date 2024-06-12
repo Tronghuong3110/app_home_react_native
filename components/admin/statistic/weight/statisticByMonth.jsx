@@ -29,7 +29,7 @@ const StatisticWeightByMonth = () => {
     setSpinner(true);
     const getAllWeight = async () => {
       const weights = await getAllWeightByMonthAndGroupByProductType(
-        month
+        month, null, 1
       );
       setData(weights);
       setSpinner(false);
