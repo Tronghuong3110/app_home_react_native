@@ -86,13 +86,12 @@ const Home = () => {
       if (handleSaveWeight == true) {
         // TH ngày lưu vẫn nằm trong tháng hiện tại
         if (date.includes(getCurrentMonth())) {
-          const cleanedString = totalPrice.toString().replace(/₫/g, '');
-          const floatValue = parseFloat(cleanedString * 1000) + parseFloat(weight * price);
-          console.log(cleanedString);
-          console.log(floatValue);
+          const cleanedString = parseFloat(totalPrice.toString().replace(/₫/g, '')) * 1000;
+          const floatValue = cleanedString + weight * parseFloat(price.toString().replace(/₫/g, '')) * 1000;
           setTotalWeight(totalWeight + weight);
           settotalPrice(formatMoney(floatValue));
-        } else {
+        } 
+        else {
           setIsUpdateTotal(!isUpdateTotal);
         }
         alert("Thành công !!");

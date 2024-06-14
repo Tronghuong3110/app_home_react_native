@@ -9,12 +9,12 @@ const ManagerProductType = () => {
   const [price, setPrice] = useState(0);
   const [isLoading, setIsLoading] = useState(false);
 
-  const handleSave = () => {
+  const handleSave = async () => {
     if (productype == "" || price == "") {
       alert("Vui lòng điền đầy đủ thông tin!!");
     } else {
       setIsLoading(true);
-      const responseCreateProductType = createProductType(productype, price);
+      const responseCreateProductType = await createProductType(productype, price);
       setIsLoading(false);
 
       if(responseCreateProductType) {

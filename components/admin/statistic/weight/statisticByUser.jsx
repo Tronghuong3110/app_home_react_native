@@ -55,7 +55,7 @@ const StatisticWeightByUser = () => {
   }, []);
 
   // lấy danh sách toàn khối lượng hàng nhóm theo loại hàng
-  useEffect(() => {
+  useEffect(() => { 
     setSpinner(true);
     const getAllWeightByUser = async () => {
       const weights = await getAllWeightByMonthAndGroupByProductType(

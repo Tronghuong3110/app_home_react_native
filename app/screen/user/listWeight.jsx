@@ -13,6 +13,7 @@ import SelectItem from "../../../components/select/selectItem";
 import Header from "../../../components/header/header";
 import { getListWeightOfUserAndMonth } from "@/lib/appwrite";
 import TableStatistic from "@/components/table/dataTable";
+import TableCustom from "@/components/table/table";
 import { getListMonthYear, getCurrentMonth } from "@/constants/date";
 
 const ListWeight = () => {
@@ -72,9 +73,6 @@ const ListWeight = () => {
   const getListWeight = async () => {
     setSpinner(true);
     const data = await getListWeightOfUserAndMonth(month, userId, productType);
-    // data = data.sort((obj1, obj2) => {
-    //   return obj1.date - obj2.date;
-    // })
     setListWeight(data);
     setSpinner(false);
     if (month == null) {
@@ -114,9 +112,11 @@ const ListWeight = () => {
             title={"Chọn loại hàng"}
             items={items}
           />
+          {isShowTabble && <TableCustom month={""} data={listWeight.data} statisticType={4} title={""}/>}
+          <Text style={styles.label}>Tổng cân nặng: {listWeight.totalWeight} kg</Text>
         </View>
 
-        {isShowTabble && <TableStatistic data={listWeight} />}
+        {/* {isShowTabble && <TableStatistic data={listWeight} />} */}
 
         {/* Button */}
         <TouchableOpacity style={styles.btn} onPress={handleShowList}>
@@ -189,4 +189,9 @@ const styles = StyleSheet.create({
     fontWeight: "500",
     fontSize: 18
   },
+  label: {
+    paddingTop: 10,
+    fontWeight: "500",
+    fontSize: 20
+  }
 });

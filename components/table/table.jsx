@@ -30,12 +30,16 @@ const TableCustom = ({ month, data, statisticType, title }) => {
         setTableHead(["Tên người", "Tên hàng", "Khối lượng", "Tổng tiền"]);
         setSizeCol([0.7, 1, 0.5, 1]);
         break;
+      case 4: 
+        setTableHead(["Ngày", "Tên hàng", "Khối lượng"]);
+        setSizeCol([1.5, 2, 1]);
+        break;
     }
   }, []);
 
   return (
     <View style={styles.container}>
-      <Text style={styles.lable}>{title} {month}</Text>
+      {statisticType != 4 && <Text style={styles.lable}>{title} {month}</Text>}
       <Table borderStyle={{ borderWidth: 1 }}>
         <Row
           data={tableHead}
